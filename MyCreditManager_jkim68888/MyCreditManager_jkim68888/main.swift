@@ -55,7 +55,23 @@ func addStudent() {
 }
 
 func deleteStudent() {
+	print("삭제할 학생의 이름을 입력해주세요")
 	
+	if let userInput = readLine() {
+		if userInput == "" {
+			print(inputWraning)
+			selectMenu()
+		} else if students.contains(userInput) {
+			students = students.filter { $0 != userInput }
+			print("\(userInput) 학생을 삭제하였습니다.")
+			print("⭐️",students)
+			selectMenu()
+		} else {
+			print("\(userInput) 학생을 찾지 못했습니다.")
+			print("⭐️",students)
+			selectMenu()
+		}
+	}
 }
 
 func addScore() {
