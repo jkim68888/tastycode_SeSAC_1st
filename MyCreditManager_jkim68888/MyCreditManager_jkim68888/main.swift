@@ -9,9 +9,7 @@ import Foundation
 
 let menu = "원하는 기능을 입력해주세요\n1: 학생추가, 2: 학생삭제, 3: 성적추가(변경), 4: 성적삭제, 5: 평점보기, X: 종료"
 let inputWraning = "입력이 잘못되었습니다. 다시 확인해주세요."
-var student: String = ""
-var score: String = ""
-var grade: String = ""
+var students: [String] = []
 
 func selectMenu() {
 	print(menu)
@@ -43,12 +41,14 @@ func addStudent() {
 		if userInput == "" {
 			print(inputWraning)
 			selectMenu()
-		} else if userInput == student {
-			print("\(student)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
+		} else if students.contains(userInput) {
+			print("\(userInput)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
+			print("⭐️",students)
 			selectMenu()
 		} else {
-			student = userInput
-			print("\(student) 학생을 추가했습니다.")
+			students.append(userInput)
+			print("\(userInput) 학생을 추가했습니다.")
+			print("⭐️",students)
 			selectMenu()
 		}
 	}
