@@ -170,7 +170,37 @@ func addScore() {
 }
 
 func deleteScore() {
+	print("성적을 삭제할 학생의 이름, 과목 이름을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift")
 	
+	if let userInput = readLine() {
+		let inputArray = userInput.split(separator: " ")
+		print("📍",inputArray)
+		
+		if userInput == "" || inputArray.count != 2 {
+			print(inputWraning)
+			selectMenu()
+		} else if studentsGrades.contains(where: { $0.student == inputArray[0] }) {
+			if let index = studentsGrades.firstIndex(where: { $0.student == inputArray[0] }) {
+				var gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
+				
+				if let idx = gradeInfo.firstIndex(where: { $0.subject == inputArray[1] }) {
+					print("📍",gradeInfo[idx])
+					
+					gradeInfo.remove(at: idx)
+				}
+			
+				studentsGrades[index].gradeInfo = gradeInfo
+			}
+			
+			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목의 성적이 삭제되었습니다.")
+			print("⭐️",studentsGrades)
+			selectMenu()
+		} else {
+			print("\(inputArray[0]) 학생을 찾지 못했습니다.")
+			print("⭐️",studentsGrades)
+			selectMenu()
+		}
+	}
 }
 
 func getGrade() {
