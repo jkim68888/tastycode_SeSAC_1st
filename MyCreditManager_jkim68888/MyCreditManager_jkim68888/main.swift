@@ -14,11 +14,11 @@ struct StudentsGrade {
 
 struct GradeInfo {
 	var subject: String
-	var score: Score
-	var grade: Double
+	var grade: Grade
+	var score: Double
 }
 
-enum Score: String {
+enum Grade: String {
 	case A
 	case A0
 	case B
@@ -104,8 +104,8 @@ func addScore() {
 	if let userInput = readLine() {
 		let inputArray = userInput.split(separator: " ")
 		print("📍",inputArray)
-		var score: Score = .F
-		var grade: Double = 0.0
+		var grade: Grade = .F
+		var score: Double = 0.0
 		
 		if userInput == "" || inputArray.count != 3 {
 			print(inputWraning)
@@ -113,32 +113,32 @@ func addScore() {
 		} else if studentsGrades.contains(where: { $0.student == inputArray[0] }) {
 			switch inputArray[2] {
 			case "A+":
-				score = .A
-				grade = 4.5
+				grade = .A
+				score = 4.5
 			case "A0":
-				score = .A0
-				grade = 4.0
+				grade = .A0
+				score = 4.0
 			case "B+":
-				score = .B
-				grade = 3.5
+				grade = .B
+				score = 3.5
 			case "B0":
-				score = .B0
-				grade = 3.0
+				grade = .B0
+				score = 3.0
 			case "C+":
-				score = .C
-				grade = 2.5
+				grade = .C
+				score = 2.5
 			case "C0":
-				score = .C0
-				grade = 2.0
+				grade = .C0
+				score = 2.0
 			case "D+":
-				score = .D
-				grade = 1.5
+				grade = .D
+				score = 1.5
 			case "D0":
-				score = .D0
-				grade = 1.0
+				grade = .D0
+				score = 1.0
 			case "F":
-				score = .F
-				grade = 0.0
+				grade = .F
+				score = 0.0
 			default:
 				print(inputWraning)
 				selectMenu()
@@ -148,9 +148,9 @@ func addScore() {
 				var gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
 				
 				if let idx = gradeInfo.firstIndex(where: { $0.subject == inputArray[1] }) {
-					gradeInfo[idx] = GradeInfo(subject: String(inputArray[1]), score: score, grade: grade)
+					gradeInfo[idx] = GradeInfo(subject: String(inputArray[1]), grade: grade, score: score)
 				} else {
-					gradeInfo.append(GradeInfo(subject: String(inputArray[1]), score: score, grade: grade))
+					gradeInfo.append(GradeInfo(subject: String(inputArray[1]), grade: grade, score: score))
 				}
 				
 				print("📍",gradeInfo)
@@ -204,7 +204,60 @@ func deleteScore() {
 }
 
 func getGrade() {
+	print("평점을 알고싶은 학생의 이름을 입력해주세요")
+
+	var sumOfScore: Double = 0.0
+	var averageScore: Double = 0.0
 	
+	if let userInput = readLine() {
+		if userInput == "" {
+			print(inputWraning)
+			selectMenu()
+		} else if studentsGrades.contains(where: { $0.student == userInput }) {
+			if let index = studentsGrades.firstIndex(where: { $0.student == userInput }) {
+				let gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
+				
+				gradeInfo.forEach {
+					var grade: String = "F"
+					
+					switch $0.grade {
+					case .A:
+						grade = "A+"
+					case .A0:
+						grade = "A0"
+					case .B:
+						grade = "B+"
+					case .B0:
+						grade = "B0"
+					case .C:
+						grade = "C+"
+					case .C0:
+						grade = "C0"
+					case .D:
+						grade = "D+"
+					case .D0:
+						grade = "D0"
+					case .F:
+						grade = "F"
+					}
+					
+					print("\($0.subject): \(grade)")
+				
+					sumOfScore += $0.score
+				}
+				
+				averageScore = sumOfScore / Double(gradeInfo.count)
+				
+				print("평점 : \(averageScore)")
+			}
+			print("⭐️",studentsGrades)
+			selectMenu()
+		} else {
+			print("\(userInput) 학생을 찾지 못했습니다.")
+			print("⭐️",studentsGrades)
+			selectMenu()
+		}
+	}
 }
 
 func endProgram() {
