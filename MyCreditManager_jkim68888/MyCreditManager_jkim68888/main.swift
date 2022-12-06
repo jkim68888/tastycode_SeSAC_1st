@@ -9,9 +9,13 @@ import Foundation
 
 struct StudentsGrade {
 	var student: String
+	var gradeInfo: [GradeInfo]
+}
+
+struct GradeInfo {
 	var subject: String
 	var score: Score
-	var grade: Int
+	var grade: Double
 }
 
 enum Score: String {
@@ -61,14 +65,12 @@ func addStudent() {
 		if userInput == "" {
 			print(inputWraning)
 			selectMenu()
-		} else if studentsGrades.contains(where: { StudentsGrade in
-			StudentsGrade.student == userInput
-		}) {
+		} else if studentsGrades.contains(where: { $0.student == userInput }) {
 			print("\(userInput)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
 			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
-			studentsGrades.append(StudentsGrade(student: userInput, subject: "", score: .F, grade: 0))
+			studentsGrades.append(StudentsGrade(student: userInput, gradeInfo: []))
 			print("\(userInput) 학생을 추가했습니다.")
 			print("⭐️",studentsGrades)
 			selectMenu()
@@ -83,9 +85,7 @@ func deleteStudent() {
 		if userInput == "" {
 			print(inputWraning)
 			selectMenu()
-		} else if studentsGrades.contains(where: { StudentsGrade in
-			StudentsGrade.student == userInput
-		}) {
+		} else if studentsGrades.contains(where: { $0.student == userInput }) {
 			studentsGrades = studentsGrades.filter { $0.student != userInput }
 			print("\(userInput) 학생을 삭제하였습니다.")
 			print("⭐️",studentsGrades)
@@ -99,7 +99,74 @@ func deleteStudent() {
 }
 
 func addScore() {
+	print("성적을 추가할 학생의 이름, 과목 이름, 성적(A+, A0, F 등)을 띄어쓰기로 구분하여 차례로 작성해주세요.\n입력예) Mickey Swift A+\n만약에 학생의 성적 중 해당 과목이 존재하면 기존 점수가 갱신됩니다.")
 	
+	if let userInput = readLine() {
+		let inputArray = userInput.split(separator: " ")
+		print("📍",inputArray)
+		var score: Score = .F
+		var grade: Double = 0.0
+		
+		if userInput == "" || inputArray.count != 3 {
+			print(inputWraning)
+			selectMenu()
+		} else if studentsGrades.contains(where: { $0.student == inputArray[0] }) {
+			switch inputArray[2] {
+			case "A+":
+				score = .A
+				grade = 4.5
+			case "A0":
+				score = .A0
+				grade = 4.0
+			case "B+":
+				score = .B
+				grade = 3.5
+			case "B0":
+				score = .B0
+				grade = 3.0
+			case "C+":
+				score = .C
+				grade = 2.5
+			case "C0":
+				score = .C0
+				grade = 2.0
+			case "D+":
+				score = .D
+				grade = 1.5
+			case "D0":
+				score = .D0
+				grade = 1.0
+			case "F":
+				score = .F
+				grade = 0.0
+			default:
+				print(inputWraning)
+				selectMenu()
+			}
+			
+			if let index = studentsGrades.firstIndex(where: { $0.student == inputArray[0] }) {
+				var gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
+				
+				if let idx = gradeInfo.firstIndex(where: { $0.subject == inputArray[1] }) {
+					gradeInfo[idx] = GradeInfo(subject: String(inputArray[1]), score: score, grade: grade)
+				} else {
+					gradeInfo.append(GradeInfo(subject: String(inputArray[1]), score: score, grade: grade))
+				}
+				
+				print("📍",gradeInfo)
+				
+				studentsGrades[index].gradeInfo = gradeInfo
+			}
+		
+			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목이 \(inputArray[2])로 추가(변경)되었습니다.")
+			print("⭐️",studentsGrades)
+			selectMenu()
+		} else {
+			print(inputWraning)
+			print("⭐️",studentsGrades)
+			selectMenu()
+		}
+	}
 }
 
 func deleteScore() {
