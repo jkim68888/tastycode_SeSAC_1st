@@ -7,18 +7,29 @@
 
 import Foundation
 
-struct StudentsGrade {
+struct StudentsGrade: Codable {
 	var student: String
 	var gradeInfo: [GradeInfo]
+	
+	enum CodingKeys: String, CodingKey {
+		case student
+		case gradeInfo
+	}
 }
 
-struct GradeInfo {
+struct GradeInfo: Codable {
 	var subject: String
 	var grade: Grade
 	var score: Double
+	
+	enum CodingKeys: String, CodingKey {
+		case subject
+		case grade
+		case score
+	}
 }
 
-enum Grade: String {
+enum Grade: String, Codable {
 	case A
 	case A0
 	case B
@@ -35,8 +46,26 @@ let inputWraning = "입력이 잘못되었습니다. 다시 확인해주세요."
 
 var studentsGrades: [StudentsGrade] = []
 
+func encodeData(_ studentsGrades: [StudentsGrade]) {
+	let encode = JSONEncoder()
+	let data = try? encode.encode(studentsGrades)
+	
+	UserDefaults.standard.set(data, forKey: "studentsGrade")
+}
+
 func selectMenu() {
 	print(menu)
+	
+	if let userDefaults = UserDefaults.standard.value(forKey: "studentsGrade") {
+	
+		let decode = JSONDecoder()
+		let dataStruct = try? decode.decode([StudentsGrade].self, from: userDefaults as! Data)
+		
+		guard let dataStruct = dataStruct else { return }
+		studentsGrades = dataStruct
+		
+		print("📍저장된 테이터: ",studentsGrades)
+	}
 	
 	if let userInput = readLine() {
 		switch userInput {
@@ -72,6 +101,7 @@ func addStudent() {
 		} else {
 			studentsGrades.append(StudentsGrade(student: userInput, gradeInfo: []))
 			print("\(userInput) 학생을 추가했습니다.")
+			encodeData(studentsGrades)
 			print("⭐️",studentsGrades)
 			selectMenu()
 		}
@@ -88,6 +118,7 @@ func deleteStudent() {
 		} else if studentsGrades.contains(where: { $0.student == userInput }) {
 			studentsGrades = studentsGrades.filter { $0.student != userInput }
 			print("\(userInput) 학생을 삭제하였습니다.")
+			encodeData(studentsGrades)
 			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
@@ -103,7 +134,7 @@ func addScore() {
 	
 	if let userInput = readLine() {
 		let inputArray = userInput.split(separator: " ")
-		print("📍",inputArray)
+		print("📍입력받은 값: ",inputArray)
 		var grade: Grade = .F
 		var score: Double = 0.0
 		
@@ -153,12 +184,13 @@ func addScore() {
 					gradeInfo.append(GradeInfo(subject: String(inputArray[1]), grade: grade, score: score))
 				}
 				
-				print("📍",gradeInfo)
+				print("📍추가해야할 성적 정보: ",gradeInfo)
 				
 				studentsGrades[index].gradeInfo = gradeInfo
 			}
 		
 			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목이 \(inputArray[2])로 추가(변경)되었습니다.")
+			encodeData(studentsGrades)
 			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
@@ -174,7 +206,7 @@ func deleteScore() {
 	
 	if let userInput = readLine() {
 		let inputArray = userInput.split(separator: " ")
-		print("📍",inputArray)
+		print("📍입력받은 값: ",inputArray)
 		
 		if userInput == "" || inputArray.count != 2 {
 			print(inputWraning)
@@ -184,7 +216,7 @@ func deleteScore() {
 				var gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
 				
 				if let idx = gradeInfo.firstIndex(where: { $0.subject == inputArray[1] }) {
-					print("📍",gradeInfo[idx])
+					print("📍삭제해야될 성적 정보: ",gradeInfo[idx])
 					
 					gradeInfo.remove(at: idx)
 				}
@@ -193,6 +225,7 @@ func deleteScore() {
 			}
 			
 			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목의 성적이 삭제되었습니다.")
+			encodeData(studentsGrades)
 			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
@@ -261,7 +294,11 @@ func getGrade() {
 }
 
 func endProgram() {
+	print("프로그램을 종료합니다...")
 	
+	encodeData(studentsGrades)
+	
+//	UserDefaults.standard.set(nil, forKey: "studentsGrades")
 }
 
 func menuWarning() {
