@@ -64,7 +64,7 @@ func selectMenu() {
 		guard let dataStruct = dataStruct else { return }
 		studentsGrades = dataStruct
 		
-		print("📍저장된 테이터: ",studentsGrades)
+//		print("📍저장된 테이터: ",studentsGrades)
 	}
 	
 	if let userInput = readLine() {
@@ -96,13 +96,13 @@ func addStudent() {
 			selectMenu()
 		} else if studentsGrades.contains(where: { $0.student == userInput }) {
 			print("\(userInput)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
 			studentsGrades.append(StudentsGrade(student: userInput, gradeInfo: []))
 			print("\(userInput) 학생을 추가했습니다.")
 			encodeData(studentsGrades)
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		}
 	}
@@ -119,11 +119,11 @@ func deleteStudent() {
 			studentsGrades = studentsGrades.filter { $0.student != userInput }
 			print("\(userInput) 학생을 삭제하였습니다.")
 			encodeData(studentsGrades)
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
 			print("\(userInput) 학생을 찾지 못했습니다.")
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		}
 	}
@@ -134,7 +134,7 @@ func addScore() {
 	
 	if let userInput = readLine() {
 		let inputArray = userInput.split(separator: " ")
-		print("📍입력받은 값: ",inputArray)
+//		print("📍입력받은 값: ",inputArray)
 		var grade: Grade = .F
 		var score: Double = 0.0
 		
@@ -184,18 +184,18 @@ func addScore() {
 					gradeInfo.append(GradeInfo(subject: String(inputArray[1]), grade: grade, score: score))
 				}
 				
-				print("📍추가해야할 성적 정보: ",gradeInfo)
+//				print("📍추가해야할 성적 정보: ",gradeInfo)
 				
 				studentsGrades[index].gradeInfo = gradeInfo
 			}
 		
 			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목이 \(inputArray[2])로 추가(변경)되었습니다.")
 			encodeData(studentsGrades)
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
 			print(inputWraning)
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		}
 	}
@@ -206,7 +206,7 @@ func deleteScore() {
 	
 	if let userInput = readLine() {
 		let inputArray = userInput.split(separator: " ")
-		print("📍입력받은 값: ",inputArray)
+//		print("📍입력받은 값: ",inputArray)
 		
 		if userInput == "" || inputArray.count != 2 {
 			print(inputWraning)
@@ -216,7 +216,7 @@ func deleteScore() {
 				var gradeInfo = studentsGrades.map { $0.gradeInfo }[index]
 				
 				if let idx = gradeInfo.firstIndex(where: { $0.subject == inputArray[1] }) {
-					print("📍삭제해야될 성적 정보: ",gradeInfo[idx])
+//					print("📍삭제해야될 성적 정보: ",gradeInfo[idx])
 					
 					gradeInfo.remove(at: idx)
 				}
@@ -226,11 +226,11 @@ func deleteScore() {
 			
 			print("\(inputArray[0]) 학생의 \(inputArray[1]) 과목의 성적이 삭제되었습니다.")
 			encodeData(studentsGrades)
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
 			print("\(inputArray[0]) 학생을 찾지 못했습니다.")
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		}
 	}
@@ -283,11 +283,11 @@ func getGrade() {
 				
 				print("평점 : \(averageScore)")
 			}
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		} else {
 			print("\(userInput) 학생을 찾지 못했습니다.")
-			print("⭐️",studentsGrades)
+//			print("⭐️",studentsGrades)
 			selectMenu()
 		}
 	}
@@ -297,8 +297,6 @@ func endProgram() {
 	print("프로그램을 종료합니다...")
 	
 	encodeData(studentsGrades)
-	
-//	UserDefaults.standard.set(nil, forKey: "studentsGrades")
 }
 
 func menuWarning() {
