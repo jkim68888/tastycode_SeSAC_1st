@@ -90,9 +90,5 @@ enum Grade: String, Codable {
     }
 ]
 ```
-<br/>
 
-### Demo
-
-![record](https://user-images.githubusercontent.com/75922558/223295920-f0c82434-5f17-48f9-bc36-0c8daeaa75fd.gif)
 
